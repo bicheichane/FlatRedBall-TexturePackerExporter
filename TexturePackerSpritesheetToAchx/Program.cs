@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +12,27 @@ namespace TexturePackerSpritesheetToAchx
     {
         static void Main(string[] args)
         {
-            XDocument TexturePackerXml = XDocument.Load("test.xml");
+            string input, output;
 
-            XElement frameListParent = TexturePackerXml.Root.Element("AnimationChain");
-
-            foreach (var frame in frameListParent.Elements("Frame"))
+            if (args.Length == 0)
             {
+                input = "test.xml";
+                output = "output.xml";
+            }
+            else if (args.Length != 2)
+                throw new IOException("Proper argument usage is <input file location> <output file location>");
+            else
+            {
+                input = args[0];
+                output = args[1];
+            }
+
+            XDocument TexturePackerXml = XDocument.Load(@input);
+
+            foreach (var animationChain in TexturePackerXml.Root.Elements("AnimationChain"))
+            {
+                var frame = animationChain.Element("Frame");
+
                 var xNode = frame.Element("X");
                 var yNode = frame.Element("Y");
                 var widthNode = frame.Element("Width");
@@ -31,7 +47,6 @@ namespace TexturePackerSpritesheetToAchx
                 frame.Add(new XElement("RightCoordinate", x + width));
                 frame.Add(new XElement("TopCoordinate", y));
                 frame.Add(new XElement("BottomCoordinate", y + height));
-                
 
                 xNode.Remove();
                 yNode.Remove();
@@ -39,7 +54,7 @@ namespace TexturePackerSpritesheetToAchx
                 heightNode.Remove();
             }
 
-            TexturePackerXml.Save("output.xml");
+            TexturePackerXml.Save(output);
         }
     }
 }
