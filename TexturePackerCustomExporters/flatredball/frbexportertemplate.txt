@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Auto-generation template created by Bashaveusheene, 2017 -->
+<!-- Sprite sheet: {{texture.fullName}} ({{texture.size.width}} x {{texture.size.height}}) -->
+<!--{{smartUpdateKey}}-->
+<AnimationChainArraySave xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <FileRelativeTextures>true</FileRelativeTextures>
+  <TimeMeasurementUnit>Undefined</TimeMeasurementUnit>
+  <CoordinateType>Pixel</CoordinateType>
+  {% for sprite in allSprites %}
+  <AnimationChain>
+    <Name>{{sprite.trimmedName}}</Name>
+    <Frame>
+        <TextureName>{{texture.fullName}}</TextureName>
+        <X>{{sprite.frameRect.x}}</X>
+        <Y>{{sprite.frameRect.y}}</Y>
+        <Width>{{sprite.frameRect.width}}</Width>
+        <Height>{{sprite.frameRect.height}}</Height>
+    </Frame>
+   </AnimationChain>
+   {% endfor %}
+  
+</AnimationChainArraySave>
