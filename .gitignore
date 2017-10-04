@@ -244,6 +244,8 @@ _Pvt_Extensions
 
 # Paket dependency manager
 .paket/paket.exe
+TexturePackerSpritesheetToAchx/bin/*
+TexturePackerSpritesheetToAchx/obj/*
 paket-files/
 
 # FAKE - F# Make

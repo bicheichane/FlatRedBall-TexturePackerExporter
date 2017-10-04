@@ -27,34 +27,45 @@ namespace TexturePackerSpritesheetToAchx
                 output = args[1];
             }
 
-            XDocument TexturePackerXml = XDocument.Load(@input);
+            XDocument InputFile = XDocument.Load(@input);
 
-            foreach (var animationChain in TexturePackerXml.Root.Elements("AnimationChain"))
+            //XNamespace xsi = @"http://www.w3.org/2001/XMLSchema-instance", xsd = @"http://www.w3.org/2001/XMLSchema";
+
+            XElement OutputFile =
+                new XElement("AnimationChainArraySave",
+                    //new XAttribute(xsi + "xsi", xsi.NamespaceName),
+                    //new XAttribute(xsd + "xsd", xsd.NamespaceName),
+                    new XElement("FileRelativeTextures", true),
+                    new XElement("TimeMeasurementUnit", "Undefined"),
+                    new XElement("CoordinateType", "Pixel"));
+
+            foreach (var sprite in InputFile.Root.Elements("sprite"))
             {
-                var frame = animationChain.Element("Frame");
-
-                var xNode = frame.Element("X");
-                var yNode = frame.Element("Y");
-                var widthNode = frame.Element("Width");
-                var heightNode = frame.Element("Height");
+                var xNode = sprite.Attribute("x");
+                var yNode = sprite.Attribute("y");
+                var widthNode = sprite.Attribute("w");
+                var heightNode = sprite.Attribute("h");
 
                 int x = int.Parse(xNode.Value);
                 int y = int.Parse(yNode.Value);
                 int width =  int.Parse(widthNode.Value);
                 int height = int.Parse(heightNode.Value);
 
-                frame.Add(new XElement("LeftCoordinate", x));
-                frame.Add(new XElement("RightCoordinate", x + width));
-                frame.Add(new XElement("TopCoordinate", y));
-                frame.Add(new XElement("BottomCoordinate", y + height));
+                
+                XElement frame = new XElement("Frame", 
+                                    new XElement("TextureName", InputFile.Root.Attribute("imagePath").Value),
+                                    new XElement("LeftCoordinate", x),
+                                    new XElement("RightCoordinate", x + width),
+                                    new XElement("TopCoordinate", y),
+                                    new XElement("BottomCoordinate", y + height));
 
-                xNode.Remove();
-                yNode.Remove();
-                widthNode.Remove();
-                heightNode.Remove();
+                XElement animationChain = new XElement("AnimationChain",
+                                            new XElement("Name", sprite.Attribute("n").Value),
+                                            frame);
+                OutputFile.Add(animationChain);
             }
 
-            TexturePackerXml.Save(output);
+            OutputFile.Save(output);
         }
     }
 }
