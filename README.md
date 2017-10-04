@@ -2,18 +2,16 @@
 
 Allows TexturePacker spritesheet integration for the FlatRedBall game engine
 
-* FlatRedBall custom exporter setup for TexturePacker 
+~~* FlatRedBall custom exporter setup for TexturePacker ~~
 * File build tool for Glue 
 
 Usage:
 
-#1 Set the TexturePackerCustomExporters folder as your TexturePacker's Exporter Directory
+#1 Choose the Generic XML data file format when publishing spritesheet.
 
-    File -> Preferences -> Exporter Directory (don't forget to restart the application after applying that change)
+#2 Check the option for "Trim sprite names"
 
-#2 Choose the FlatRedBall data file format when publishing spritesheet.
-
-#3 Add the TexturePackerToSpritesheetAcx.exe as a file build tool on Glue.
+#3 Build the solution and add the TexturePackerToSpritesheetAcx.exe as a file build tool on Glue.
 
     Settings -> FileBuildTools -> Add new build tool
 
