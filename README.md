@@ -2,7 +2,7 @@
 
 Allows TexturePacker spritesheet integration for the FlatRedBall game engine
 
-~~* FlatRedBall custom exporter setup for TexturePacker ~~
+* ~FlatRedBall custom exporter setup for TexturePacker~ : now it only uses generic XML data format from TexturePacker to support free version
 * File build tool for Glue 
 
 Usage:
