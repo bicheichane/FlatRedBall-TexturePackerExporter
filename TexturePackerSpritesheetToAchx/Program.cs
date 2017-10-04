@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -12,6 +14,7 @@ namespace TexturePackerSpritesheetToAchx
     {
         static void Main(string[] args)
         {
+            IDictionary<string, SortedDictionary<int, XElement> > animationsDictionary = new Dictionary<string, SortedDictionary<int, XElement>>();
             string input, output;
 
             if (args.Length == 0)
@@ -51,17 +54,46 @@ namespace TexturePackerSpritesheetToAchx
                 int width =  int.Parse(widthNode.Value);
                 int height = int.Parse(heightNode.Value);
 
-                
-                XElement frame = new XElement("Frame", 
-                                    new XElement("TextureName", InputFile.Root.Attribute("imagePath").Value),
-                                    new XElement("LeftCoordinate", x),
-                                    new XElement("RightCoordinate", x + width),
-                                    new XElement("TopCoordinate", y),
-                                    new XElement("BottomCoordinate", y + height));
+                string spriteName = sprite.Attribute("n").Value;
+                string animationFrameId = Regex.Match(spriteName, @"\d+$").Value;
 
+                XElement frame = new XElement("Frame",
+                    new XElement("TextureName", InputFile.Root.Attribute("imagePath").Value),
+                    new XElement("LeftCoordinate", x),
+                    new XElement("RightCoordinate", x + width),
+                    new XElement("TopCoordinate", y),
+                    new XElement("BottomCoordinate", y + height));
+
+                if (animationFrameId == "") //if sprite is not part of an animation, just do standalone animationChain for it
+                {
+                    XElement animationChain = new XElement("AnimationChain",
+                        new XElement("Name", spriteName),
+                        frame);
+                    OutputFile.Add(animationChain);
+                }
+                else
+                {
+                    string animationName = spriteName.Replace(animationFrameId, "");
+
+                    if(animationsDictionary.ContainsKey(animationName) == false)
+                        animationsDictionary.Add(animationName, new SortedDictionary<int, XElement>());
+
+                    animationsDictionary[animationName].Add(Int32.Parse(animationFrameId), frame);
+                }
+
+                
+            }
+
+            foreach (var animationChainDictionary in animationsDictionary)
+            {
                 XElement animationChain = new XElement("AnimationChain",
-                                            new XElement("Name", sprite.Attribute("n").Value),
-                                            frame);
+                    new XElement("Name", animationChainDictionary.Key));
+
+                foreach (var animationFrame in animationChainDictionary.Value)
+                {
+                    animationChain.Add(animationFrame.Value);
+                }
+
                 OutputFile.Add(animationChain);
             }
 
