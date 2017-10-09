@@ -73,6 +73,7 @@ namespace TexturePackerSpritesheetToAchx
                 }
                 else
                 {
+                    frame.Add(new XElement("FrameLength", "0.1"));
                     string animationName = spriteName.Replace(animationFrameId, "");
 
                     if(animationsDictionary.ContainsKey(animationName) == false)
